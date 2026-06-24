@@ -30,3 +30,13 @@ button:disabled { opacity: .65; cursor: wait; }
 .notice.success { border: 1px solid rgba(98, 196, 127, .5); }
 .notice.error { border: 1px solid rgba(228, 92, 92, .6); }
 @media (max-width: 760px) { .upload-panel, .section-heading { display: block; } }
+.button-link, .card-footer a { background: #c9a227; color: #0d0d0d; padding: 10px 14px; border-radius: 999px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.card-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+.watch-shell { display: grid; gap: 24px; }
+.player-frame { overflow: hidden; border: 1px solid rgba(201,162,39,.35); border-radius: 28px; background: #020202; box-shadow: 0 24px 80px rgba(0,0,0,.45); }
+.player-frame video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.processing-slate { min-height: min(62vw, 620px); display: grid; place-content: center; padding: 48px; text-align: center; background: radial-gradient(circle at center, rgba(201,162,39,.16), rgba(0,0,0,.94) 68%); }
+.watch-meta { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 28px; align-items: start; }
+.meta-card { display: grid; gap: 10px; padding: 20px; border: 1px solid rgba(248,241,220,.14); border-radius: 20px; background: rgba(255,255,255,.04); color: #cfc2aa; }
+.meta-card strong { color: #f8f1dc; font-size: 1.1rem; }
+@media (max-width: 760px) { .watch-meta { grid-template-columns: 1fr; } }
