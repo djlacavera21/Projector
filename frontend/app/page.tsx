@@ -7,6 +7,7 @@ type Video = {
   status: string;
   description: string;
   hls_url?: string | null;
+  original_filename?: string | null;
   created_at: string;
 };
 
@@ -134,6 +135,7 @@ export default async function Home() {
               </div>
               <h3>{video.title}</h3>
               <p>{video.description}</p>
+              {video.original_filename && <p className="file-chip">Stored original: {video.original_filename}</p>}
               <div className="card-footer">
                 <small>{video.channel}</small>
                 <a href={`/watch/${video.id}`}>Watch</a>

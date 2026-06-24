@@ -5,6 +5,8 @@ type Video = {
   status: string;
   description: string;
   hls_url?: string | null;
+  original_filename?: string | null;
+  upload_path?: string | null;
   created_at: string;
 };
 
@@ -64,6 +66,7 @@ export default async function WatchPage({ params }: { params: Promise<{ id: stri
           <strong>{video.channel}</strong>
           <span>{createdAt}</span>
           <span>ID: {video.id}</span>
+          {video.original_filename && <span>Original: {video.original_filename}</span>}
         </aside>
       </section>
     </main>

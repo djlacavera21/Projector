@@ -20,6 +20,8 @@ class Video(BaseModel):
     description: str = ""
     thumbnail_url: HttpUrl | None = None
     hls_url: HttpUrl | None = None
+    original_filename: str | None = None
+    upload_path: str | None = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
