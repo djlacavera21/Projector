@@ -59,7 +59,10 @@ export default async function Home() {
               </div>
               <h3>{video.title}</h3>
               <p>{video.description}</p>
-              <small>{video.channel}</small>
+              <div className="card-footer">
+                <small>{video.channel}</small>
+                <a href={`/watch/${video.id}`}>Watch</a>
+              </div>
             </article>
           ))}
           {videos.length === 0 && <p>Start the backend to load the bootstrap feed.</p>}
