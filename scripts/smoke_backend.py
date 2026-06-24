@@ -20,7 +20,7 @@ def test_healthz() -> None:
 def test_video_feed() -> None:
     response = client.get("/api/videos")
     assert response.status_code == 200
-    assert response.json()[0]["id"] == "projector-manifesto"
+    assert {video["id"] for video in response.json()} >= {"projector-manifesto", "temple-upload-pipeline"}
 
 
 def test_video_search_and_detail() -> None:
@@ -59,7 +59,10 @@ def test_upload_validation_and_queue() -> None:
         files={"file": ("clip.mp4", BytesIO(b"fake video bytes"), "video/mp4")},
     )
     assert good.status_code == 202
-    assert good.json()["status"] == "queued"
+    payload = good.json()
+    assert payload["status"] == "queued"
+    assert payload["original_filename"] == "clip.mp4"
+    assert payload["upload_path"].endswith("clip.mp4")
 
 
 if __name__ == "__main__":

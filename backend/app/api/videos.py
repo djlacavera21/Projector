@@ -1,60 +1,29 @@
+from pathlib import Path
+import shutil
+
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
 
 from app.models.video import Video, VideoCreate, VideoStatus, new_video_id
+from app.services.videos import create_video, get_video as fetch_video, list_videos as fetch_videos, video_stats
 
 router = APIRouter(prefix="/videos", tags=["videos"])
-
-_demo_videos: list[Video] = [
-    Video(
-        id="projector-manifesto",
-        title="Projector Manifesto",
-        channel="Projector Core",
-        description="A privacy-first video platform bootstrap entry, ready to become an HLS asset.",
-        hls_url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-    ),
-    Video(
-        id="temple-upload-pipeline",
-        title="Temple Upload Pipeline",
-        channel="Projector Labs",
-        status=VideoStatus.processing,
-        description="A sample processing record that previews how uploads move toward FFmpeg-backed HLS.",
-    ),
-]
+UPLOAD_ROOT = Path("media/uploads")
 
 
 def demo_video_stats() -> dict[str, int]:
-    channels = {video.channel for video in _demo_videos}
-    return {
-        "total_videos": len(_demo_videos),
-        "ready_videos": sum(video.status == VideoStatus.ready for video in _demo_videos),
-        "queued_videos": sum(video.status == VideoStatus.queued for video in _demo_videos),
-        "processing_videos": sum(video.status == VideoStatus.processing for video in _demo_videos),
-        "channels": len(channels),
-    }
+    return video_stats()
 
 
 def _find_video(video_id: str) -> Video:
-    for video in _demo_videos:
-        if video.id == video_id:
-            return video
-    raise HTTPException(status_code=404, detail="Video not found")
+    video = fetch_video(video_id)
+    if video is None:
+        raise HTTPException(status_code=404, detail="Video not found")
+    return video
 
 
 @router.get("", response_model=list[Video])
 async def list_videos(status_filter: VideoStatus | None = None, q: str | None = None) -> list[Video]:
-    videos = _demo_videos
-    if status_filter is not None:
-        videos = [video for video in videos if video.status == status_filter]
-    if q:
-        needle = q.casefold()
-        videos = [
-            video
-            for video in videos
-            if needle in video.title.casefold()
-            or needle in video.channel.casefold()
-            or needle in video.description.casefold()
-        ]
-    return videos
+    return fetch_videos(status_filter=status_filter, q=q)
 
 
 @router.get("/{video_id}", response_model=Video)
@@ -64,15 +33,15 @@ async def get_video(video_id: str) -> Video:
 
 @router.post("", response_model=Video, status_code=status.HTTP_201_CREATED)
 async def create_video_metadata(payload: VideoCreate) -> Video:
-    video = Video(
-        id=new_video_id(),
-        title=payload.title,
-        channel=payload.channel,
-        description=payload.description,
-        status=VideoStatus.queued,
+    return create_video(
+        Video(
+            id=new_video_id(),
+            title=payload.title,
+            channel=payload.channel,
+            description=payload.description,
+            status=VideoStatus.queued,
+        )
     )
-    _demo_videos.insert(0, video)
-    return video
 
 
 @router.post("/upload", response_model=Video, status_code=status.HTTP_202_ACCEPTED)
@@ -85,12 +54,22 @@ async def upload_video(
     if not file.content_type or not file.content_type.startswith("video/"):
         raise HTTPException(status_code=400, detail="Upload must be a video file")
 
+    video_id = new_video_id("queued")
+    video_dir = UPLOAD_ROOT / video_id
+    video_dir.mkdir(parents=True, exist_ok=True)
+    safe_name = Path(file.filename or "upload.bin").name
+    upload_path = video_dir / safe_name
+
+    with upload_path.open("wb") as destination:
+        shutil.copyfileobj(file.file, destination)
+
     video = Video(
-        id=new_video_id("queued"),
+        id=video_id,
         title=title,
         channel=channel,
         status=VideoStatus.queued,
-        description=description or f"Queued upload: {file.filename}",
+        description=description or f"Queued upload: {safe_name}",
+        original_filename=safe_name,
+        upload_path=str(upload_path),
     )
-    _demo_videos.insert(0, video)
-    return video
+    return create_video(video)

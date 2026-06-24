@@ -14,13 +14,13 @@ The bootstrap stack follows the README custom path:
 ## MVP Flow
 
 1. A creator submits video metadata and a video file to `POST /api/videos/upload`.
-2. The API validates that the upload is a video file and returns a queued video record.
-3. A future worker will persist the original in MinIO, transcode it to adaptive HLS renditions, then mark it ready.
-4. The frontend reads `GET /api/videos` to render the bootstrap feed.
+2. The API validates that the upload is a video file, writes the original into `media/uploads/<video-id>/`, and records the queued video in the SQLite MVP store.
+3. A future worker will move originals to MinIO, transcode them to adaptive HLS renditions, then mark them ready.
+4. The frontend reads `GET /api/videos` to render the persisted bootstrap feed and queued uploads.
 
 ## Next Implementation Targets
 
-- Replace in-memory videos with SQLAlchemy models and Alembic migrations.
+- Promote the SQLite MVP store to SQLAlchemy models and Alembic migrations backed by PostgreSQL.
 - Add authenticated creator accounts and channels.
 - Split FFmpeg processing into a dedicated worker service.
 - Store original uploads and HLS output in MinIO.
