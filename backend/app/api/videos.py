@@ -22,6 +22,17 @@ _demo_videos: list[Video] = [
 ]
 
 
+def demo_video_stats() -> dict[str, int]:
+    channels = {video.channel for video in _demo_videos}
+    return {
+        "total_videos": len(_demo_videos),
+        "ready_videos": sum(video.status == VideoStatus.ready for video in _demo_videos),
+        "queued_videos": sum(video.status == VideoStatus.queued for video in _demo_videos),
+        "processing_videos": sum(video.status == VideoStatus.processing for video in _demo_videos),
+        "channels": len(channels),
+    }
+
+
 def _find_video(video_id: str) -> Video:
     for video in _demo_videos:
         if video.id == video_id:
