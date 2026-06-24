@@ -52,3 +52,12 @@ button:disabled { opacity: .65; cursor: wait; }
 .principle-card p { color: #cfc2aa; line-height: 1.65; }
 @media (max-width: 760px) { .stat-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); } .policy-pills { justify-content: flex-start; } }
 .file-chip { display: inline-flex; width: fit-content; padding: 6px 10px; border-radius: 999px; background: rgba(201,162,39,.12); color: #f8f1dc !important; border: 1px solid rgba(201,162,39,.25); font-size: .82rem; font-weight: 800; }
+.comments-panel { display: grid; gap: 22px; }
+.comment-list { display: grid; gap: 14px; }
+.comment-card { padding: 18px; border: 1px solid rgba(248,241,220,.12); border-radius: 18px; background: rgba(255,255,255,.04); }
+.comment-card div { display: flex; justify-content: space-between; gap: 12px; color: #f8f1dc; }
+.comment-card time { color: #c9a227; font-size: .82rem; font-weight: 800; }
+.comment-card p { color: #d8ccb3; line-height: 1.65; margin-bottom: 0; }
+.comment-form { grid-template-columns: minmax(180px, .35fr) minmax(260px, 1fr) auto; align-items: end; }
+.comment-form textarea { min-height: 76px; }
+@media (max-width: 900px) { .comment-form { grid-template-columns: 1fr; } .comment-card div { display: grid; } }
