@@ -19,7 +19,7 @@ Projector aims to be the platform where "See a problem, come with a solution" ap
 
 ## Current Status
 
-**MVP in Planning / Bootstrap Phase**
+**MVP Bootstrap Scaffold Implemented**
 
 This repository is the central hub for building Projector. We start smart: leverage battle-tested open source foundations where it accelerates delivery, while building custom layers for true differentiation and your specific branding/vision.
 
@@ -131,14 +131,14 @@ Projector/
 
 ## Getting Started (Self-Host MVP)
 
-(Once core is implemented — instructions will evolve)
+The repository now includes a runnable custom-path scaffold: FastAPI backend, Next.js frontend, PostgreSQL, Redis, and MinIO.
 
 1. Clone this repo.
 2. `cp .env.example .env` and configure (domain, secrets, storage paths, MinIO keys).
-3. `docker compose up -d --build`
-4. Access at https://yourdomain.com (Caddy handles certs).
-5. Create first admin user via CLI or initial setup endpoint.
-6. Upload test video → watch transcoding progress → enjoy adaptive playback.
+3. `docker compose up --build`
+4. Access the web app at http://localhost:3000.
+5. Open API docs at http://localhost:8000/docs.
+6. Use the bootstrap `GET /api/videos` feed or submit a test video to `POST /api/videos/upload`; the full persistence/transcoding worker is the next implementation target.
 
 Detailed guides in `/docs`.
 
@@ -147,8 +147,8 @@ For PeerTube fork path: Follow their excellent self-hosting docs, then apply Pro
 ## Roadmap (Phased, Realistic)
 
 **Phase 0: Bootstrap (Now)**
-- Repo setup, branding assets (logo, banner), detailed planning, contributor guidelines.
-- Decision: PeerTube fork vs pure custom (or both in parallel experiments).
+- Repo setup, Docker-first custom scaffold, initial API/UI, contributor guidelines.
+- Decision remains open: PeerTube fork for quick wins, custom MVP here, or both in parallel experiments.
 
 **Phase 1: Core Self-Hosted VOD (1-3 months focused)**
 - User auth, channels, video CRUD + upload pipeline.
