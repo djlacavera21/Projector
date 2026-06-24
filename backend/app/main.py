@@ -2,8 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.health import router as health_router
 from app.api.instance import router as instance_router
+from app.api.comments import router as comments_router
 from app.api.videos import router as videos_router
 from app.services.videos import init_video_store
+from app.services.comments import init_comment_store
 
 app = FastAPI(
     title="Projector API",
@@ -22,11 +24,13 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup() -> None:
     init_video_store()
+    init_comment_store()
 
 
 app.include_router(health_router)
 app.include_router(instance_router, prefix="/api")
 app.include_router(videos_router, prefix="/api")
+app.include_router(comments_router, prefix="/api")
 
 
 @app.get("/")

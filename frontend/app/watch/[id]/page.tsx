@@ -1,3 +1,13 @@
+import { CommentPanel } from "../../../components/CommentPanel";
+
+type Comment = {
+  id: string;
+  author: string;
+  body: string;
+  parent_id?: string | null;
+  created_at: string;
+};
+
 type Video = {
   id: string;
   title: string;
@@ -10,20 +20,27 @@ type Video = {
   created_at: string;
 };
 
-async function getVideo(id: string): Promise<Video | null> {
+async function getJson<T>(path: string, fallback: T): Promise<T> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
   try {
-    const response = await fetch(`${apiUrl}/api/videos/${id}`, { next: { revalidate: 30 } });
-    if (!response.ok) return null;
+    const response = await fetch(`${apiUrl}${path}`, { next: { revalidate: 30 } });
+    if (!response.ok) return fallback;
     return response.json();
   } catch {
-    return null;
+    return fallback;
   }
+}
+
+async function getVideo(id: string): Promise<Video | null> {
+  return getJson<Video | null>(`/api/videos/${id}`, null);
 }
 
 export default async function WatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const video = await getVideo(id);
+  const [video, comments] = await Promise.all([
+    getVideo(id),
+    getJson<Comment[]>(`/api/videos/${id}/comments`, []),
+  ]);
 
   if (!video) {
     return (
@@ -69,6 +86,7 @@ export default async function WatchPage({ params }: { params: Promise<{ id: stri
           {video.original_filename && <span>Original: {video.original_filename}</span>}
         </aside>
       </section>
+      <CommentPanel videoId={video.id} initialComments={comments} />
     </main>
   );
 }
