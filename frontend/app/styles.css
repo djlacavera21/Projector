@@ -40,3 +40,14 @@ button:disabled { opacity: .65; cursor: wait; }
 .meta-card { display: grid; gap: 10px; padding: 20px; border: 1px solid rgba(248,241,220,.14); border-radius: 20px; background: rgba(255,255,255,.04); color: #cfc2aa; }
 .meta-card strong { color: #f8f1dc; font-size: 1.1rem; }
 @media (max-width: 760px) { .watch-meta { grid-template-columns: 1fr; } }
+.stat-panel { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.stat-panel div { padding: 18px; border: 1px solid rgba(201,162,39,.2); border-radius: 20px; background: linear-gradient(180deg, rgba(201,162,39,.12), rgba(255,255,255,.03)); }
+.stat-panel strong { display: block; color: #c9a227; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; }
+.stat-panel span { color: #cfc2aa; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; }
+.charter-panel { background: linear-gradient(135deg, rgba(13,13,13,.88), rgba(54,38,11,.68)); }
+.policy-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; max-width: 420px; }
+.policy-pills span { padding: 8px 12px; border: 1px solid rgba(248,241,220,.18); border-radius: 999px; color: #f8f1dc; background: rgba(255,255,255,.05); font-size: .84rem; font-weight: 800; }
+.principle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.principle-card { padding: 20px; border-left: 3px solid #c9a227; border-radius: 18px; background: rgba(0,0,0,.28); }
+.principle-card p { color: #cfc2aa; line-height: 1.65; }
+@media (max-width: 760px) { .stat-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); } .policy-pills { justify-content: flex-start; } }
